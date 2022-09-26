@@ -196,7 +196,7 @@ with DAG(
     dag_id="scrape_kpopalbums",
     default_args=default_args,
     description="Scraping and saving results from kpopalbums.com",
-    schedule_interval="0 */6 * * *",
+    schedule_interval="0 */12 * * *",
     start_date=pendulum.datetime(2022, 10, 1, tz="UTC"),
     dagrun_timeout=datetime.timedelta(minutes=10)
 ) as dag:

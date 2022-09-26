@@ -1,17 +1,16 @@
-# # Notes
+# Notes
 
-# # The DAG will be built for just this file, as each file corresponds to a single site
-# # Due to this, we will not need to have multiple classes or parsing methods to be called in a separate file
-# # DAG structure will be an operator for each subsection of the musicplaza.com website, of which there are 5
+# The DAG will be built for just this file, as each file corresponds to a single site
+# Due to this, we will not need to have multiple classes or parsing methods to be called in a separate file
+# DAG structure will be an operator for each subsection of the musicplaza.com website, of which there are 5
 
-# # Each operator will have a task, where each task will report how many items are contained in each subsection of the site
-# # The python method will check how many items there are on each subpage and then loop through the subsequent number of pages to retrieve the items
-# # Items will be scraped from the site using BeautifulSoup
-# # This decision was made in order to identify if a particular way of scraping a site breaks
+# Each operator will have a task, where each task will report how many items are contained in each subsection of the site
+# The python method will check how many items there are on each subpage and then loop through the subsequent number of pages to retrieve the items
+# Items will be scraped from the site using BeautifulSoup
+# This decision was made in order to identify if a particular way of scraping a site breaks
 
-# # Scraped items will be stored in a table/dataframe/csv format
+# Scraped items will be stored in a table/dataframe/csv format
 
-from xml.dom.minidom import Element
 from bs4 import BeautifulSoup
 import requests
 
@@ -49,7 +48,7 @@ def scrape_new_releases():
     # We continue scraping until we come across an element that indicates an empty page
     index = 1
     not_an_empty_page = True
-    while(index > 0 and not_an_empty_page):
+    while(index > 0 and not_an_empty_page and index < 80):
         page = requests.get("https://www.musicplaza.com/collections/new-releases?page={index}&view=ajax")
         soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -70,7 +69,7 @@ def scrape_new_releases():
             list_of_prices = soup.find_all("div", class_="tt-price")
             for elem in list_of_prices:
                 item_price = elem.get_text(strip=True)
-                product_cost_list.append(item_price)
+                product_cost_list.append("https://www.musicplaza.com" + item_price)
 
             index += 1
 
@@ -82,7 +81,7 @@ def scrape_pre_order():
     # We continue scraping until we come across an element that indicates an empty page
     index = 1
     not_an_empty_page = True
-    while(index > 0 and not_an_empty_page):
+    while(index > 0 and not_an_empty_page and index < 80):
         page = requests.get("https://www.musicplaza.com/collections/pre-order?page={index}&view=ajax")
         soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -97,7 +96,7 @@ def scrape_pre_order():
                 item_url = url_tag['href']
                 item_name = elem.get_text(strip=True) 
                 product_name_list.append(item_name)
-                product_link_list.append(item_url)
+                product_link_list.append("https://www.musicplaza.com" + item_url)
 
             # Get Prices
             list_of_prices = soup.find_all("div", class_="tt-price")
@@ -115,7 +114,7 @@ def scrape_k_pop():
     # We continue scraping until we come across an element that indicates an empty page
     index = 1
     not_an_empty_page = True
-    while(index > 0 and not_an_empty_page):
+    while(index > 0 and not_an_empty_page and index < 80):
         page = requests.get("https://www.musicplaza.com/collections/k-pop?page={index}&view=ajax")
         soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -130,7 +129,7 @@ def scrape_k_pop():
                 item_url = url_tag['href']
                 item_name = elem.get_text(strip=True) 
                 product_name_list.append(item_name)
-                product_link_list.append(item_url)
+                product_link_list.append("https://www.musicplaza.com" + item_url)
 
             # Get Prices
             list_of_prices = soup.find_all("div", class_="tt-price")
@@ -148,7 +147,7 @@ def scrape_adult_contemporary():
     # We continue scraping until we come across an element that indicates an empty page
     index = 1
     not_an_empty_page = True
-    while(index > 0 and not_an_empty_page):
+    while(index > 0 and not_an_empty_page and index < 80):
         page = requests.get("https://www.musicplaza.com/collections/adult-contemporary?page={index}&view=ajax")
         soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -163,7 +162,7 @@ def scrape_adult_contemporary():
                 item_url = url_tag['href']
                 item_name = elem.get_text(strip=True) 
                 product_name_list.append(item_name)
-                product_link_list.append(item_url)
+                product_link_list.append("https://www.musicplaza.com" + item_url)
 
             # Get Prices
             list_of_prices = soup.find_all("div", class_="tt-price")
@@ -186,7 +185,7 @@ with DAG(
     dag_id="scrape_musicplaza",
     default_args=default_args,
     description="Scraping and saving results from musicplaza.com",
-    schedule_interval="0 */6 * * *",
+    schedule_interval="0 */12 * * *",
     start_date=pendulum.datetime(2022, 10, 1, tz="UTC"),
     dagrun_timeout=datetime.timedelta(minutes=10)
 ) as dag:

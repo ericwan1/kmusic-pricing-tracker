@@ -19,10 +19,18 @@ Under this site:
     https://www.musicplaza.com/collections/k-pop
     https://www.musicplaza.com/collections/adult-contemporary
 
+Site 4: kpopstoreinusa
+https://kpopstoreinusa.com/shop/autographed-album/
+An autographed album seller 
+https://kpopstoreinusa.com/shop/albums/
+https://kpopstoreinusa.com/pre-order/
+
+Site 5: subkshop (not yet completed) 
+https://www.subkshop.com/collections/pre-order
+https://www.subkshop.com/collections/albums 
 ----------
 
 Potential Sites to Add and Scrape
 https://kpopmart.com/
 https://www.kpoptown.com/
 https://www.ktown4u.com/
-https://www.subkshop.com/
