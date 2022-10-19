@@ -1,0 +1,8 @@
+# Function dependencies, for example:
+# package>=version
+google-cloud-bigquery
+pandas
+datetime
+bs4>=4.10.0
+
+

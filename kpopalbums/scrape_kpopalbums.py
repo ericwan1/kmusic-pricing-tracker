@@ -21,7 +21,8 @@ from datetime import datetime, timedelta
 import pendulum
 
 import pandas as pd
-import time
+from time import sleep
+from random import randint
 
 
 default_args = {
@@ -74,6 +75,8 @@ def scrape_new_arrivals():
 
             product_cost_list.append(product_price)
 
+        sleep(randint(1,5))
+
 
 def scrape_pre_orders():
     page = requests.get("https://www.kpopalbums.com/collections/pre-order?page=1&view=ajax")
@@ -101,6 +104,8 @@ def scrape_pre_orders():
             product_price = product.find("span", {"class":"product-price__price"}).get_text(strip=True)
 
             product_cost_list.append(product_price)
+
+        sleep(randint(1,5))
 
 
 def scrape_whats_hot():
@@ -130,6 +135,8 @@ def scrape_whats_hot():
 
             product_cost_list.append(product_price)
 
+        sleep(randint(1,5))
+
 
 def scrape_hot_deals():
     page = requests.get("https://www.kpopalbums.com/collections/hot-deals?page=1&view=ajax")
@@ -157,6 +164,8 @@ def scrape_hot_deals():
             product_price = product.find("span", {"class":"product-price__price"}).get_text(strip=True)
 
             product_cost_list.append(product_price)
+
+        sleep(randint(1,5))
 
 
 def scrape_restocked():
@@ -186,6 +195,8 @@ def scrape_restocked():
 
             product_cost_list.append(product_price)
 
+        sleep(randint(1,5))
+
 
 def assemble_table():
     output_df = pd.DataFrame(list(zip(product_name_list, product_link_list, product_cost_list)),
@@ -197,7 +208,7 @@ with DAG(
     default_args=default_args,
     description="Scraping and saving results from kpopalbums.com",
     schedule_interval="0 */12 * * *",
-    start_date=pendulum.datetime(2022, 10, 1, tz="UTC"),
+    start_date=pendulum.datetime(2022, 10, 10, tz="UTC"),
     dagrun_timeout=datetime.timedelta(minutes=10)
 ) as dag:
 

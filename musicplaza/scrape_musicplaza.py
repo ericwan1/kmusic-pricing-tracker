@@ -20,7 +20,8 @@ from datetime import datetime, timedelta
 import pendulum
 
 import pandas as pd
-import time
+from time import sleep
+from random import randint
 
 
 default_args = {
@@ -73,6 +74,8 @@ def scrape_new_releases():
 
             index += 1
 
+            sleep(randint(1,5))
+
         else:
             not_an_empty_page = False
 
@@ -105,6 +108,8 @@ def scrape_pre_order():
                 product_cost_list.append(item_price)
 
             index += 1
+
+            sleep(randint(1,5))
 
         else:
             not_an_empty_page = False
@@ -139,6 +144,8 @@ def scrape_k_pop():
 
             index += 1
 
+            sleep(randint(1,5))
+
         else:
             not_an_empty_page = False
 
@@ -172,6 +179,8 @@ def scrape_adult_contemporary():
 
             index += 1
 
+            sleep(randint(1,5))
+
         else:
             not_an_empty_page = False
 
@@ -186,7 +195,7 @@ with DAG(
     default_args=default_args,
     description="Scraping and saving results from musicplaza.com",
     schedule_interval="0 */12 * * *",
-    start_date=pendulum.datetime(2022, 10, 1, tz="UTC"),
+    start_date=pendulum.datetime(2022, 10, 10, tz="UTC"),
     dagrun_timeout=datetime.timedelta(minutes=10)
 ) as dag:
 

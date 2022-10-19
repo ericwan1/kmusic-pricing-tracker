@@ -7,8 +7,9 @@ from datetime import datetime, timedelta
 import pendulum
 
 import pandas as pd
-import time
 
+from time import sleep
+from random import randint
 
 default_args = {
     'owner': 'ew',
@@ -24,7 +25,7 @@ product_name_list = []
 product_link_list = []
 product_cost_list = []
 
-
+# We are making one request, so only minor time delays between each task in the DAG
 def scrape_autographed_albums():
     site= "https://kpopstoreinusa.com/shop/autographed-album/"
     hdr = {'User-Agent': 'Mozilla/5.0'}
@@ -44,6 +45,8 @@ def scrape_autographed_albums():
         product_name_list.append(item_name)
         product_link_list.append(item_url)
         product_cost_list.append(item_price)
+
+    sleep(randint(1,5))
 
 
 def scrape_preorder_albums():
@@ -65,6 +68,8 @@ def scrape_preorder_albums():
         product_name_list.append(item_name)
         product_link_list.append(item_url)
         product_cost_list.append(item_price)
+
+    sleep(randint(1,5))
 
 
 def scrape_albums():
@@ -105,3 +110,42 @@ def scrape_albums():
 
         except:
             continue
+
+    sleep(randint(1,5))
+
+
+def assemble_table():
+    output_df = pd.DataFrame(list(zip(product_name_list, product_link_list, product_cost_list)),
+              columns=['product_name','product_link', 'product_price'])
+
+
+with DAG(
+    dag_id="scrape_kpopstoreinusa",
+    default_args=default_args,
+    description="Scraping and saving results from https://kpopstoreinusa.com/",
+    schedule_interval="0 5 * * *",
+    start_date=pendulum.datetime(2022, 10, 10, tz="UTC"),
+    dagrun_timeout=datetime.timedelta(minutes=10)
+) as dag:
+
+    extract_autographs = PythonOperator(
+        task_id = 'extract_autographs',
+        python_callable=scrape_autographed_albums
+    )
+
+    extract_preorder = PythonOperator(
+        task_id = 'extract_preorder',
+        python_callable=scrape_preorder_albums
+    )
+
+    extract_new_releases = PythonOperator(
+        task_id = 'extract_new_releases',
+        python_callable=scrape_albums
+    )
+
+    run_assemble_table = PythonOperator(
+        task_id = 'run_assemble_table',
+        python_callable=assemble_table
+    )
+
+    extract_autographs >> extract_preorder >> extract_new_releases >> run_assemble_table
