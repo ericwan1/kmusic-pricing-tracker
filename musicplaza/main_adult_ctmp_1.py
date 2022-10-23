@@ -15,26 +15,30 @@ product_sign_list = []
 product_vendor_list = []
 ds_list = []
 
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'}
+headers = {'User-Agent': 'adsbot-google'}
 
 def scrape_adult_contemporary():
     # We continue scraping until we come across an element that indicates an empty page
     index = 1
     not_an_empty_page = True
-    while(not_an_empty_page and index < 80):
+    while(not_an_empty_page and index < 30):
+        print(index)
         page = requests.get("https://www.musicplaza.com/collections/adult-contemporary?page={index}&view=ajax", headers=headers)
         soup = BeautifulSoup(page.content, 'html.parser')
 
         # Check for an empty page
         out_of_items = soup.find("div", class_="tt-empty-search")
-        if(out_of_items == None):
-    
+        if out_of_items != None:
+            not_an_empty_page = False
+
+        else:
             # Get Title and URL
             list_of_titles = soup.find_all("h2", class_="tt-title prod-thumb-title-color")
             for elem in list_of_titles:
                 url_tag = elem.find("a")
                 item_url = url_tag['href']
                 item_name = elem.get_text(strip=True) 
+                print(item_name)
                 product_name_list.append(item_name)
                 product_link_list.append("https://www.musicplaza.com" + item_url)
 
@@ -52,10 +56,7 @@ def scrape_adult_contemporary():
 
             index += 1
 
-            sleep(randint(1,5))
-
-        else:
-            not_an_empty_page = False
+            sleep(randint(2,5))
 
 
 def load_to_bigquery():
@@ -88,3 +89,6 @@ def start_scrape_musicplaza(event, context):
     print("done scraping adult contemporary")
     load_to_bigquery()
     print("done uploading data to bigquery")
+    print(product_cost_list)
+
+start_scrape_musicplaza("blah", "blah")
