@@ -34,7 +34,7 @@ def scrape_whats_hot():
         # Go through all the available pages
         for i in range(1, math.ceil(math.ceil(items_count/12)*1/3)):
             try:
-                page = requests.get("https://www.kpopalbums.com/collections/whats-hot?page={i}&view=ajax",headers=headers)
+                page = requests.get(f"https://www.kpopalbums.com/collections/whats-hot?page={i}&view=ajax",headers=headers)
                 soup = BeautifulSoup(page.content, 'html.parser')
 
                 # Retrieve the item names from each page

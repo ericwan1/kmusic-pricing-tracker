@@ -3,6 +3,5 @@
 google-cloud-bigquery
 pandas
 datetime
-bs4>=4.10.0
-
-
+BeautifulSoup4
+requests

@@ -39,8 +39,8 @@ def scrape_boys():
 
     try:
         # Default view is 20 items per page
-        for i in range(math.ceil(total_items/20/2), math.ceil(total_items/20)):
-            site = "https://www.kpopstoreinusa.com/collections/boy-group-album?page={i}"
+        for i in range(math.ceil(total_items/20/2) + 1, math.ceil(total_items/20) + 1):
+            site = f"https://www.kpopstoreinusa.com/collections/boy-group-album?page={i}"
             hdr = {'User-Agent': 'Pinterest'}
             req = Request(site,headers=hdr)
             page = urlopen(req)

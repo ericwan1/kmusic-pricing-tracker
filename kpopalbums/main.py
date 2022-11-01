@@ -53,9 +53,9 @@ def scrape_new_arrivals():
 
     if look_at_sites:
         # Go through all the available pages
-        for i in range(1, math.ceil(items_count/12)):
+        for i in range(1, math.ceil(items_count/12) + 1):
             try:
-                page = requests.get("https://www.kpopalbums.com/collections/lastest-release?page={i}&view=ajax",headers=headers)
+                page = requests.get(f"https://www.kpopalbums.com/collections/lastest-release?page={i}&view=ajax",headers=headers)
                 soup = BeautifulSoup(page.content, 'html.parser')
 
                 # Retrieve the item names from each page
@@ -101,9 +101,9 @@ def scrape_pre_orders():
 
     if look_at_sites:
         # Go through all the available pages
-        for i in range(1, math.ceil(items_count/12)):
+        for i in range(1, math.ceil(items_count/12) + 1):
             try:
-                page = requests.get("https://www.kpopalbums.com/collections/pre-order?page={i}&view=ajax",headers=headers)
+                page = requests.get(f"https://www.kpopalbums.com/collections/pre-order?page={i}&view=ajax",headers=headers)
                 soup = BeautifulSoup(page.content, 'html.parser')
 
                 # Retrieve the item names from each page

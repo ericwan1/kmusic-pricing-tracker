@@ -38,8 +38,8 @@ def scrape_autographed_albums():
 
     try:
         # Default view is 20 items per page
-        for i in range(math.ceil(total_items/20)):
-            site = "https://www.kpopstoreinusa.com/collections/autographed-album?page={i}"
+        for i in range(1, math.ceil(total_items/20)+1):
+            site = f"https://www.kpopstoreinusa.com/collections/autographed-album?page={i}"
             hdr = {'User-Agent': 'Pinterest'}
             req = Request(site,headers=hdr)
             page = urlopen(req)
@@ -87,8 +87,8 @@ def scrape_preorder_albums():
 
     try:
         # Default view is 20 items per page
-        for i in range(math.ceil(total_items/20)):
-            site = "https://www.kpopstoreinusa.com/collections/pre-order-album?page={i}"
+        for i in range(1, math.ceil(total_items/20) + 1):
+            site = f"https://www.kpopstoreinusa.com/collections/pre-order-album?page={i}"
             hdr = {'User-Agent': 'Pinterest'}
             req = Request(site,headers=hdr)
             page = urlopen(req)

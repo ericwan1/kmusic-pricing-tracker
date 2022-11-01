@@ -23,7 +23,9 @@ output_df = []
 def scrape_boys():
     try:
         site= "https://www.kpopstoreinusa.com/collections/girl-group-album"
-        hdr = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'}
+        hdr = {'User-Agent': 'adsbot-google',
+            'Referer': 'https://google.com',
+            }
         req = Request(site,headers=hdr)
         page = urlopen(req)
         soup = BeautifulSoup(page, 'lxml')
@@ -39,10 +41,10 @@ def scrape_boys():
 
     try:
         # Default view is 20 items per page
-        for i in range(1, math.ceil(int(total_items)/20)):
+        for i in range(1, math.ceil(int(total_items)/20) + 1):
             print(i)
 
-            site = "https://www.kpopstoreinusa.com/collections/girl-group-album?page={i}"
+            site = f"https://www.kpopstoreinusa.com/collections/girl-group-album?page={i}"
             hdr = {'User-Agent': 'Pinterest'}
             req = Request(site,headers=hdr)
             page = urlopen(req)
@@ -67,7 +69,7 @@ def scrape_boys():
 
                 print(main_info["data-product-title"])
 
-            sleep(randint(1,5))
+            sleep(randint(15,16))
 
     except:
         print(f"ERROR: scraping {site} for product information failed unexpectedly")
