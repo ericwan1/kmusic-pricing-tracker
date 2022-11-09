@@ -28,8 +28,10 @@ fail_count = 0
 product_name_list = []
 product_link_list = []
 product_cost_list = []
+product_discount_cost_list = []
 product_sign_list = []
 product_vendor_list = []
+product_sold_out_list = []
 ds_list = []
 
 output_df = []
@@ -67,31 +69,59 @@ if look_at_sites:
 
             soup = BeautifulSoup(pg_html, 'lxml')
 
-            # Retrieve the item names from each page
-            all_products_names = soup.find_all("a", class_="item__name pg__sync-url pg__name pg__name--list hide")
-            # Retrieve product prices
-            all_products_prices = soup.find_all('div', class_='product-price')
+            item_list = soup.find_all("div",{"class":"grid__item effect-hover item pg transition"})
 
-            # Want to ensure a match in the stripped values; otherwise, this would ruin our dataframe creation 
-            if len(all_products_names) == len(all_products_prices):
-                for product in all_products_names:
-                    product_name = product.get_text(strip=True)
-                    product_hyperlink = product['href']
+            for item in item_list:
+                # Title and URL Information
+                title_url = item.find("a", class_="item__name pg__sync-url pg__name pg__name--list hide")
+                item_title = title_url['title']
+                item_url = title_url['href']
+                # Product Review Information
+                rating = item.find("div", class_="jdgm-prev-badge")
+                avg_rating = rating['data-average-rating']
+                no_of_q = rating['data-number-of-questions']
+                no_of_reviews = rating['data-number-of-reviews']
+                # Pricing Information
+                price = item.find("span", class_="product-price__price").get_text(strip=True)
+                try:
+                    disc_price = item.find("span", class_="product-price__price").get_text(strip=True)
+                except:
+                    print(f"no discount price detected for {item_url}")
+                # Sold Out Status
+                # <span class="product-price__sold-out">Sold out</span>
+                try:
+                    status = item.find("span", class_="product-price__sold-out")
+                    if status:
+                        soldout_status = True
+                except:
+                    pass
+                
 
-                    product_name_list.append(product_name)
-                    product_link_list.append("https://www.kpopalbums.com" + str(product_hyperlink))
+            # # Retrieve the item names from each page
+            # all_products_names = soup.find_all("a", class_="item__name pg__sync-url pg__name pg__name--list hide")
+            # # Retrieve product prices
+            # all_products_prices = soup.find_all('div', class_='product-price')
 
-                    product_sign_list.append(False)
-                    product_vendor_list.append('kpopalbums')
-                    ds_list.append(datetime.now().strftime('%Y-%m-%d'))
+            # # Want to ensure a match in the stripped values; otherwise, this would ruin our dataframe creation 
+            # if len(all_products_names) == len(all_products_prices):
+            #     for product in all_products_names:
+            #         product_name = product.get_text(strip=True)
+            #         product_hyperlink = product['href']
 
-                for product in all_products_prices:
-                    product_price = product.find("span", {"class":"product-price__price"}).get_text(strip=True)
-                    num_price = re.findall( r'\d+\.*\d*', product_price)[0]
-                    product_cost_list.append(num_price)
+            #         product_name_list.append(product_name)
+            #         product_link_list.append("https://www.kpopalbums.com" + str(product_hyperlink))
 
-            else:
-                print(f"ERROR: mismatched soup value lengths in {page_ind}; Try rerunning the link manually and verify output")
+            #         product_sign_list.append(False)
+            #         product_vendor_list.append('kpopalbums')
+            #         ds_list.append(datetime.now().strftime('%Y-%m-%d'))
+
+            #     for product in all_products_prices:
+            #         product_price = product.find("span", {"class":"product-price__price"}).get_text(strip=True)
+            #         num_price = re.findall( r'\d+\.*\d*', product_price)[0]
+            #         product_cost_list.append(num_price)
+
+            # else:
+            #     print(f"ERROR: mismatched soup value lengths in {page_ind}; Try rerunning the link manually and verify output")
 
         except:
             print("ERROR: scraping what's hot failed unexpectedly")
@@ -118,4 +148,4 @@ if len(product_name_list) == len(product_cost_list) == len(product_link_list) ==
                                 columns=['item','price','url','is_autograph','vendor','ds']
                                 )
 
-output_df.to_csv('kpopalbums_what_hot_last_page.csv')
+output_df.to_csv('kpopalbums_what_hot_last_page.csv',index=False)
