@@ -43,10 +43,10 @@ output_df = []
 # We continue scraping until we come across an element that indicates an empty page
 index = 1
 not_an_empty_page = True
-while(not_an_empty_page and index < 15):
+while(not_an_empty_page and index < 20):
     pg_count_url = f"https://www.musicplaza.com/collections/light-sticks?page={index}&view=ajax"
     soup = get_soup(pg_count_url)
-
+    time.sleep(3)
     # Check for an empty page
     out_of_items = soup.find("div", class_="tt-empty-search")
     if(out_of_items == None):
@@ -55,8 +55,9 @@ while(not_an_empty_page and index < 15):
         for item in item_list:
             # Title & URL Info
             t_url_info = item.find("h2", class_="tt-title prod-thumb-title-color")
+            url_tag = t_url_info.find("a")
             item_title = t_url_info.get_text(strip=True)
-            item_url = "https://www.musicplaza.com" + str(t_url_info['href'])
+            item_url = "https://www.musicplaza.com" + str(url_tag['href'])
 
             # Price Information
             price_info = item.find("div", class_="tt-price")
