@@ -43,8 +43,8 @@ output_df = []
 # We continue scraping until we come across an element that indicates an empty page
 index = 1
 not_an_empty_page = True
-while(not_an_empty_page and index < 15):
-    pg_count_url = f"https://www.musicplaza.com/collections/pre-order?page={index}&view=ajax"
+while(not_an_empty_page and index < 250):
+    pg_count_url = f"https://www.musicplaza.com/collections/k-pop?page={index}&view=ajax"
     soup = get_soup(pg_count_url)
 
     # Check for an empty page
@@ -128,6 +128,6 @@ lists_equal_len = False not in [len(i) == len(main_list[0]) for i in main_list]
 if lists_equal_len:
     print("Success; Building Output")
     output_df = pd.DataFrame(transposed_main_list, columns=column_names)
-    output_df.to_csv('kpopalbums_whats_hot.csv',index=False)
+    output_df.to_csv('musicplaza_kpop.csv',index=False)
 else:
     print("ERROR: Mismatched Lengths in Final Lists")
