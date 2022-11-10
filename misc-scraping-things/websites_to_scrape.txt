@@ -1,17 +1,17 @@
-Site 1: kpopalbums (WIP)
+Site 1: kpopalbums (DONE)
 https://www.kpopalbums.com/ 
 Under this site:
     https://www.kpopalbums.com/collections/lastest-release
     https://www.kpopalbums.com/collections/pre-order
-    https://www.kpopalbums.com/collections/best-selling-albums-of-the-week
     https://www.kpopalbums.com/collections/hot-deals
     https://www.kpopalbums.com/collections/restocked
+    https://www.kpopalbums.com/collections/whats-hot
 
 Site 2: mwave (DONE)
 https://shop.mwave.me/en/cd.html
 There is only this link, as the other signed cd pages will slowly lose items (and this shop is only good for autographed items and will not replace stock)
 
-Site 3: musicplaza (NOT STARTED)
+Site 3: musicplaza (WIP)
 https://www.musicplaza.com/
 Under this site:
     https://www.musicplaza.com/collections/new-releases

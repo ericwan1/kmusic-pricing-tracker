@@ -42,7 +42,7 @@ ds_list = []
 output_df = []
 
 try:
-    data = driver.get("https://www.kpopalbums.com/collections/whats-hot?page=1&view=ajax")
+    data = driver.get("https://www.kpopalbums.com/collections/lastest-release?page=1&view=ajax")
     time.sleep(3)
     pg_html = driver.page_source
     pg_html = pg_html.replace('&lt;', '<').replace('&gt;', '>')
@@ -54,13 +54,13 @@ try:
     look_at_sites = True
 
 except:
-    print("ERROR: could not grab what's hot page count from kpopalbums.com")
+    print("ERROR: could not grab lastest-release page count from kpopalbums.com")
     look_at_sites = False
     
 if look_at_sites:
     for page_ind in range(1,total_pages+1):
         try:
-            pg_count_url = f"https://www.kpopalbums.com/collections/whats-hot?page={page_ind}&view=ajax"
+            pg_count_url = f"https://www.kpopalbums.com/collections/lastest-release?page={page_ind}&view=ajax"
             soup = get_soup(pg_count_url)
 
             item_list = soup.find_all("div",{"class":"grid__item effect-hover item pg transition"})
@@ -125,7 +125,7 @@ if look_at_sites:
                 ds_list.append(datetime.now().strftime('%Y-%m-%d'))
 
         except:
-            print("ERROR: scraping what's hot failed unexpectedly")
+            print("ERROR: scraping lastest-release failed unexpectedly")
             print(f"index is {page_ind}")
             fail_count += 1
             if fail_count < 10:
@@ -166,6 +166,6 @@ lists_equal_len = False not in [len(i) == len(main_list[0]) for i in main_list]
 if lists_equal_len:
     print("Success; Building Output")
     output_df = pd.DataFrame(transposed_main_list, columns=column_names)
-    output_df.to_csv('kpopalbums_whats_hot.csv',index=False)
+    output_df.to_csv('kpopalbums_latest_release.csv',index=False)
 else:
     print("ERROR: Mismatched Lengths in Final Lists")
