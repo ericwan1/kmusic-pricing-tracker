@@ -26,7 +26,6 @@ import math
 
 from scraping_module import get_soup
 
-fail_count = 0
 # For building output
 product_name_list = []
 product_link_list = []
@@ -41,98 +40,60 @@ product_sold_out_list = []
 ds_list = []
 output_df = []
 
-try:
-    data = driver.get("https://www.kpopalbums.com/collections/whats-hot?page=1&view=ajax")
-    time.sleep(3)
-    pg_html = driver.page_source
-    pg_html = pg_html.replace('&lt;', '<').replace('&gt;', '>')
+# We continue scraping until we come across an element that indicates an empty page
+index = 1
+not_an_empty_page = True
+while(not_an_empty_page and index < 15):
+    pg_count_url = f"https://www.musicplaza.com/collections/pre-order?page={index}&view=ajax"
+    soup = get_soup(pg_count_url)
 
-    soup = BeautifulSoup(pg_html, 'lxml')
-    items_count_str = soup.find("div", {"class":"ct__total col-xs-12 col-sm-3 gutter-ele-bottom-tbs text-uppercase fw-bold"}).get_text(strip=True)
-    items_count = int(items_count_str.split()[0])
-    total_pages = math.ceil(items_count/12)
-    look_at_sites = True
+    # Check for an empty page
+    out_of_items = soup.find("div", class_="tt-empty-search")
+    if(out_of_items == None):
 
-except:
-    print("ERROR: could not grab what's hot page count from kpopalbums.com")
-    look_at_sites = False
-    
-if look_at_sites:
-    for page_ind in range(1,total_pages+1):
-        try:
-            pg_count_url = f"https://www.kpopalbums.com/collections/whats-hot?page={page_ind}&view=ajax"
-            soup = get_soup(pg_count_url)
+        # Get Title and URL
+        list_of_titles = soup.find_all("h2", class_="tt-title prod-thumb-title-color")
+        for elem in list_of_titles:
+            url_tag = elem.find("a")
+            item_url = url_tag['href']
+            item_name = elem.get_text(strip=True) 
+            product_name_list.append(item_name)
+            product_link_list.append("https://www.musicplaza.com" + item_url)
 
-            item_list = soup.find_all("div",{"class":"grid__item effect-hover item pg transition"})
-            
-            for item in item_list:
-                # Title and URL Information
-                title_url = item.find("a", class_="item__name pg__sync-url pg__name pg__name--list hide")
-                item_title = title_url['title']
-                item_url = "https://www.kpopalbums.com" + str(title_url['href'])
-      
-                # Product Review Information
-                try:
-                    rating = item.find("div", class_="jdgm-prev-badge")
-                    if rating != None:
-                        avg_rating = rating['data-average-rating']
-                        no_of_q = rating['data-number-of-questions']
-                        no_of_reviews = rating['data-number-of-reviews']
-                    else:
-                        avg_rating = None
-                        no_of_q = None
-                        no_of_reviews = None
-                except:
-                    avg_rating = None
-                    no_of_q = None
-                    no_of_reviews = None
+            product_sign_list.append(False)
+            product_vendor_list.append('musicplaza')
+            ds_list.append(datetime.now().strftime('%Y-%m-%d'))
 
-                # Pricing Information
-                price = item.find("span", class_="product-price__price").get_text(strip=True)
-                num_price = re.findall( r'\d+\.*\d*', price)[0]
+        # Get Prices
+        list_of_prices = soup.find_all("div", class_="tt-price")
+        for elem in list_of_prices:
+            item_price = elem.get_text(strip=True)
+            num_price = re.findall( r'\d+\.*\d*', item_price)[0]
+            product_cost_list.append(num_price)
 
-                try:
-                    disc_price = item.find("s", class_="product-price__price product-price__sale").get_text(strip=True)
-                    if disc_price != None:
-                        num_disc_price = re.findall( r'\d+\.*\d*', disc_price)[0]
-                    else:
-                        num_disc_price = None
-                except:
-                    num_disc_price = None
+        index += 1
 
-                # Sold Out Status
-                try:
-                    status = item.find("span", class_="product-price__sold-out")
-                    if status == None:
-                        soldout_status = False
-                    else:
-                        soldout_status = True
-                except:
-                    soldout_status = False
+        time.sleep(math.randint(1,5))
+
+    else:
+        not_an_empty_page = False
+
+
                 
-                product_name_list.append(item_title)
-                product_link_list.append(item_url)
-                product_cost_list.append(num_price)
-                product_discount_cost_list.append(num_disc_price)
-                product_sign_list.append(False)
+product_name_list.append(item_title)
+product_link_list.append(item_url)
+product_cost_list.append(num_price)
+product_discount_cost_list.append(num_disc_price)
+product_sign_list.append(False)
 
-                rating_list.append(avg_rating)
-                no_of_q_list.append(no_of_q)
-                no_of_reviews_list.append(no_of_reviews)
+rating_list.append(avg_rating)
+no_of_q_list.append(no_of_q)
+no_of_reviews_list.append(no_of_reviews)
 
-                product_vendor_list.append("kpopalbums")
-                product_sold_out_list.append(soldout_status)
-                ds_list.append(datetime.now().strftime('%Y-%m-%d'))
+product_vendor_list.append("kpopalbums")
+product_sold_out_list.append(soldout_status)
+ds_list.append(datetime.now().strftime('%Y-%m-%d'))
 
-        except:
-            print("ERROR: scraping what's hot failed unexpectedly")
-            print(f"index is {page_ind}")
-            fail_count += 1
-            if fail_count < 10:
-                time.sleep(random.randint(30,60))
-                continue
-            else:
-                break
 
 driver.quit()
 
