@@ -35,6 +35,11 @@ Site 5: JYPshop (DONE)
 https://en.thejypshop.com/
 Under this site:
     ~ Everything for each Artist 
+
+Site 6: SMTown (WIP)
+https://smglobalshop.com/
+Under this site:
+    https://smglobalshop.com/collections/all?usf_take=200
     
 ----------
 
@@ -44,5 +49,3 @@ https://www.kpoptown.com/
 https://www.ktown4u.com/
 https://www.subkshop.com/
 https://en.ygselect.com/
-https://smglobalshop.com/
-    - https://smglobalshop.com/collections/all?usf_take=84
