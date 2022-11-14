@@ -1,0 +1,51 @@
+Site 1: kpopalbums (DONE)
+https://www.kpopalbums.com/ 
+Under this site:
+    https://www.kpopalbums.com/collections/lastest-release
+    https://www.kpopalbums.com/collections/pre-order
+    https://www.kpopalbums.com/collections/hot-deals
+    https://www.kpopalbums.com/collections/restocked
+    https://www.kpopalbums.com/collections/whats-hot
+
+Site 2: mwave (DONE)
+https://shop.mwave.me/en/cd.html
+There is only this link, as the other signed cd pages will slowly lose items (and this shop is only good for autographed items and will not replace stock)
+
+Site 3: musicplaza (WIP)
+https://www.musicplaza.com/
+Under this site:
+    https://www.musicplaza.com/collections/new-releases
+    https://www.musicplaza.com/collections/pre-order
+    https://www.musicplaza.com/collections/k-pop
+    https://www.musicplaza.com/collections/adult-contemporary
+    https://www.musicplaza.com/collections/light-sticks
+    https://www.musicplaza.com/collections/cd (posters)
+    https://www.musicplaza.com/collections/photo-book 
+
+Site 4: kpopstoreinusa
+https://www.kpopstoreinusa.com/
+Under this site:
+    https://www.kpopstoreinusa.com/collections/autographed-album
+    https://www.kpopstoreinusa.com/collections/boy-group-album
+    https://www.kpopstoreinusa.com/collections/girl-group-album
+    https://www.kpopstoreinusa.com/collections/light-stick
+    https://www.kpopstoreinusa.com/collections/merchandise
+
+Site 5: JYPshop (DONE)
+https://en.thejypshop.com/
+Under this site:
+    ~ Everything for each Artist 
+
+Site 6: SMTown (WIP)
+https://smglobalshop.com/
+Under this site:
+    https://smglobalshop.com/collections/all?usf_take=200
+    
+----------
+
+Potential Sites to Add and Scrape
+https://kpopmart.com/
+https://www.kpoptown.com/
+https://www.ktown4u.com/
+https://www.subkshop.com/
+https://en.ygselect.com/
