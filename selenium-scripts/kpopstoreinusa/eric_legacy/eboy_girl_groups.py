@@ -5,7 +5,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 options = Options()
-options.binary_location = "/Users/ericwan/Desktop/Google Chrome.app/Contents/MacOS/Google Chrome"
+#options.binary_location = "/Users/ericwan/Desktop/Google Chrome.app/Contents/MacOS/Google Chrome"
+options.binary_location = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 options.add_argument("start-maximized")
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--incognito')
@@ -16,13 +17,13 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 
 # After getting the driver working
 import time
-from bs4 import  BeautifulSoup
+from bs4 import BeautifulSoup
 import re
 import math
 from datetime import datetime
 import pandas as pd
 import random
-
+startTime = time.time()
 fail_count = 0
 
 product_name_list = []
@@ -36,9 +37,9 @@ output_df = []
 
 
 try:
-    pg_count_url = "https://www.kpopstoreinusa.com/collections/girl-group-album"
+    pg_count_url = "https://www.kpopstoreinusa.com/collections/boy-girl-group-album"
     data = driver.get(pg_count_url)
-    time.sleep(3)
+    time.sleep(8)
 
     pg_html = driver.page_source
     pg_html = pg_html.replace('&lt;', '<').replace('&gt;', '>')
@@ -56,9 +57,9 @@ except:
 # Default view is 20 items per page
 for i in range(1, math.ceil(total_items/20) + 1):
     try:
-        site = f"https://www.kpopstoreinusa.com/collections/girl-group-album?page={i}"
+        site = f"https://www.kpopstoreinusa.com/collections/boy-girl-group-album?page={i}"
         data = driver.get(pg_count_url)
-        time.sleep(random.randint(4,8))
+        time.sleep(3)
 
         pg_html = driver.page_source
         pg_html = pg_html.replace('&lt;', '<').replace('&gt;', '>')
@@ -71,6 +72,8 @@ for i in range(1, math.ceil(total_items/20) + 1):
             main_info=item.find('a',{'class':'card-title link-underline card-title-ellipsis'})
             cost_info=item.find('div',{'class':'price__regular'}).get_text(strip=True)
             cost = re.findall( r'\d+\.*\d*', cost_info)[0]
+            availability_info = item.find('div',{'class':'product-item'})
+            a = availability_info['data-json-product']
 
             # Add information for item
             product_name_list.append(main_info["data-product-title"])
@@ -80,7 +83,7 @@ for i in range(1, math.ceil(total_items/20) + 1):
             product_sign_list.append(False)
             product_vendor_list.append('kpopstoreinusa')
             ds_list.append(datetime.now().strftime('%Y-%m-%d'))
-
+        print((time.time() - startTime))
     except:
         print(f"ERROR: scraping {site} for product information failed unexpectedly")
         fail_count += 1
@@ -104,4 +107,5 @@ if len(product_name_list) == len(product_cost_list) == len(product_link_list) ==
                                 columns=['item','price','url','is_autograph','vendor','ds']
                                 )
 
-output_df.to_csv('kpopstoreinusa_girls.csv')
+output_df.to_csv('ekpopstoreinusa_boy_girl.csv',encoding='utf-8-sig')
+print((time.time() - startTime))

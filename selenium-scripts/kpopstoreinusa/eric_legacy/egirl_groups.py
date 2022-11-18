@@ -5,7 +5,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 options = Options()
-options.binary_location = "/Users/ericwan/Desktop/Google Chrome.app/Contents/MacOS/Google Chrome"
+#options.binary_location = "/Users/ericwan/Desktop/Google Chrome.app/Contents/MacOS/Google Chrome"
+options.binary_location = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 options.add_argument("start-maximized")
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--incognito')
@@ -36,7 +37,7 @@ output_df = []
 
 
 try:
-    pg_count_url = "https://www.kpopstoreinusa.com/collections/boy-group-album"
+    pg_count_url = "https://www.kpopstoreinusa.com/collections/girl-group-album"
     data = driver.get(pg_count_url)
     time.sleep(3)
 
@@ -56,7 +57,7 @@ except:
 # Default view is 20 items per page
 for i in range(1, math.ceil(total_items/20) + 1):
     try:
-        site = f"https://www.kpopstoreinusa.com/collections/boy-group-album?page={i}"
+        site = f"https://www.kpopstoreinusa.com/collections/girl-group-album?page={i}"
         data = driver.get(pg_count_url)
         time.sleep(random.randint(4,8))
 
@@ -104,4 +105,4 @@ if len(product_name_list) == len(product_cost_list) == len(product_link_list) ==
                                 columns=['item','price','url','is_autograph','vendor','ds']
                                 )
 
-output_df.to_csv('kpopstoreinusa_boys.csv')
+output_df.to_csv('kpopstoreinusa_girls.csv',encoding='utf-8-sig')
