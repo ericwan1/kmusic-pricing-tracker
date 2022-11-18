@@ -134,4 +134,4 @@ output_df = pd.DataFrame(
                         )),
                 columns=['item','url','artist','discount_price','price','sold_out','ds'])
 
-output_df.to_csv('test_jyp_shop_merch_cheer_blrdvd.csv')
+output_df.to_csv('jyp_shop_merch_cheer_blrdvd.csv')

@@ -43,7 +43,7 @@ output_df = []
 # We continue scraping until we come across an element that indicates an empty page
 index = 1
 not_an_empty_page = True
-while(not_an_empty_page and index < 15):
+while(not_an_empty_page and index < 60):
     pg_count_url = f"https://www.musicplaza.com/collections/photo-book?page={index}&view=ajax"
     soup = get_soup(pg_count_url)
     time.sleep(3)
@@ -66,8 +66,9 @@ while(not_an_empty_page and index < 15):
 
             # Sold Out Status
             try:
-                so_tag = item.find("span", class_="tt-label-our-stock")
-                so_status = True
+                so_tag = item.find("span", class_="tt-label-our-stock").get_text(strip=True)
+                if so_tag == "Sold Out":
+                    so_status = True
             except:
                 so_status = False
 

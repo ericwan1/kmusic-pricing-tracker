@@ -66,8 +66,9 @@ while(not_an_empty_page and index < 20):
 
             # Sold Out Status
             try:
-                so_tag = item.find("span", class_="tt-label-our-stock")
-                so_status = True
+                so_tag = item.find("span", class_="tt-label-our-stock").get_text(strip=True)
+                if so_tag == "Sold Out":
+                    so_status = True
             except:
                 so_status = False
 
