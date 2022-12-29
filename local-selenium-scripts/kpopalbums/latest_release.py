@@ -41,7 +41,7 @@ product_vendor_list = []
 product_sold_out_list = []
 ds_list = []
 output_df = []
-print("here!")
+
 try:
     page_url = "https://www.kpopalbums.com/collections/lastest-release?page=1&view=ajax"
     pass_tag = "div"
@@ -52,7 +52,7 @@ try:
 except:
     print("ERROR: could not grab what's lastest-release count from kpopalbums.com")
     look_at_sites = False
-print("HERE!")
+
 if look_at_sites:
     for page_ind in range(1,total_pages+1):
         try:

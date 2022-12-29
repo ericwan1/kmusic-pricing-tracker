@@ -1,30 +1,24 @@
 # Import Needed Packages for the driver
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 # Import libraries to authenticate to google cloud
 from google.cloud import bigquery
 
 # Imports for the scraper
-import time
 from bs4 import  BeautifulSoup
-import re
-from datetime import datetime
-import pandas as pd
-import random
 import numpy as np
+import pandas as pd
+from datetime import datetime
+import random
+import re
 import math
+import time
 
-# Driver options & Creating Driver
-options = Options()
-options.binary_location = ""
-options.add_argument("start-maximized")
-options.add_argument('--ignore-certificate-errors')
-options.add_argument('--incognito')
-options.add_argument('--headless')
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+driver = webdriver.Remote(
+            command_executor='http://35.238.56.243:4444/wd/hub',
+            options=webdriver.ChromeOptions()
+)
 
 # Functions used in the scraper script
 def get_page_count(pg_count_url, element_tag, tag_content):
