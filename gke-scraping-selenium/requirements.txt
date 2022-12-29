@@ -1,0 +1,9 @@
+google-cloud
+google-cloud-bigquery
+webdriver-manager
+selenium
+bs4
+lxml
+pandas
+numpy
+requests
