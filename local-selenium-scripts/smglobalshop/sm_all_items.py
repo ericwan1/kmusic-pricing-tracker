@@ -99,23 +99,24 @@ ds_list = []
 try:
     logger.info("Navigating to page...")
     driver.get("https://global.shop.smtown.com/collections/all")
-    
+
     # Wait a bit for initial page load (more realistic delay)
     logger.info("Waiting for page to load...")
     time.sleep(8)
-    
+
     # Check if we got an error page
     page_source_check = driver.page_source
-    if "ERR_NAME_NOT_RESOLVED" in page_source_check or \
-       "This site can't be reached" in page_source_check or \
-       "DNS_PROBE" in page_source_check:
+    if ("ERR_NAME_NOT_RESOLVED" in page_source_check or
+            "This site can't be reached" in page_source_check or
+            "DNS_PROBE" in page_source_check):
         raise Exception(
             "Failed to load page: DNS resolution error. "
             "The website may be down or there's a network issue. "
             "Check your network connection. "
-            "If this persists, you may be blocked or need to check your DNS settings."
+            "If this persists, you may be blocked or need to check "
+            "your DNS settings."
         )
-    
+
     # Wait for page to actually load - wait for product cards to appear
     try:
         logger.info("Waiting for product content to appear...")
@@ -137,23 +138,23 @@ try:
                 "Please check your network connection."
             )
         # Check for blocking/access denied messages
-        if "access denied" in current_source.lower() or \
-           "blocked" in current_source.lower() or \
-           "cloudflare" in current_source.lower() and \
-           "checking your browser" in current_source.lower():
+        if ("access denied" in current_source.lower() or
+                "blocked" in current_source.lower() or
+                ("cloudflare" in current_source.lower() and
+                 "checking your browser" in current_source.lower())):
             raise Exception(
-                "Possible blocking detected. The site may be blocking automated access. "
-                "Try running without headless mode or check if you can access the site "
-                "manually in a browser."
+                "Possible blocking detected. The site may be blocking "
+                "automated access. Try running without headless mode or "
+                "check if you can access the site manually in a browser."
             )
         logger.warning(
             "Timeout waiting for product elements, but continuing anyway"
         )
-    
+
     logger.info("Starting to load all items by scrolling and clicking")
 
-    # First, let's try to find and count initial product cards
-    # Note: # is part of the class name, so we need to escape it or use attribute selector
+    # First, try to find and count initial product cards
+    # Note: # is part of class name, escape it or use attribute selector
     initial_count = len(
         driver.find_elements(By.CSS_SELECTOR, "div[class*='product-card']")
     )
@@ -169,7 +170,7 @@ try:
             # Try to find the "Load More" button with multiple selectors
             button = None
             button_found = False
-            
+
             # Try primary xpath
             try:
                 xpath = '//*[@id="usf_container"]/div[2]/div[3]/div/button'
@@ -189,24 +190,27 @@ try:
                     button_found = True
                 except Exception:
                     try:
-                        # Try by partial text match using XPath (CSS doesn't support :contains)
-                        button = driver.find_element(
-                            By.XPATH,
-                            "//button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', "
+                        # Try by partial text match using XPath
+                        # (CSS doesn't support :contains)
+                        xpath_text = (
+                            "//button[contains(translate(text(), "
+                            "'ABCDEFGHIJKLMNOPQRSTUVWXYZ', "
                             "'abcdefghijklmnopqrstuvwxyz'), 'load more')]"
                         )
+                        button = driver.find_element(By.XPATH, xpath_text)
                         button_found = True
                     except Exception:
                         pass
-            
+
             if button_found and button:
                 # Scroll to button first (more human-like)
-                driver.execute_script(
-                    "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                    button
+                scroll_script = (
+                    "arguments[0].scrollIntoView({behavior: 'smooth', "
+                    "block: 'center'});"
                 )
+                driver.execute_script(scroll_script, button)
                 time.sleep(random.uniform(1, 2))  # Random delay
-                
+
                 actions = ActionChains(driver)
                 actions.move_to_element(button).pause(
                     random.uniform(0.5, 1.5)
@@ -218,11 +222,13 @@ try:
                 # No button found, use scrolling
                 logger.info("No button found, scrolling to load more items...")
                 # Get current scroll position
-                current_scroll = driver.execute_script("return window.pageYOffset;")
+                current_scroll = driver.execute_script(
+                    "return window.pageYOffset;"
+                )
                 page_height = driver.execute_script(
                     "return document.body.scrollHeight;"
                 )
-                
+
                 # Gradual scroll down (more realistic)
                 scroll_step = 500
                 for scroll_pos in range(
@@ -230,36 +236,42 @@ try:
                     int(page_height),
                     scroll_step
                 ):
-                    driver.execute_script(f"window.scrollTo(0, {scroll_pos});")
+                    driver.execute_script(
+                        f"window.scrollTo(0, {scroll_pos});"
+                    )
                     time.sleep(random.uniform(0.3, 0.7))
-                
+
                 # Final scroll to bottom
                 driver.execute_script(
                     "window.scrollTo(0, document.body.scrollHeight);"
                 )
                 time.sleep(random.uniform(2, 4))
-                
+
                 # Check if page height increased (new content loaded)
                 new_page_height = driver.execute_script(
                     "return document.body.scrollHeight;"
                 )
                 if new_page_height > page_height:
                     logger.info(
-                        f"Page height increased: {page_height} -> {new_page_height}"
+                        f"Page height increased: {page_height} -> "
+                        f"{new_page_height}"
                     )
-            
+
             # Wait a bit for new items to load
             time.sleep(random.uniform(2, 4))
-            
+
             # Count current products
             current_product_count = len(
-                driver.find_elements(By.CSS_SELECTOR, "div[class*='product-card']")
+                driver.find_elements(
+                    By.CSS_SELECTOR, "div[class*='product-card']"
+                )
             )
-            
+
             if current_product_count > last_product_count:
+                diff = current_product_count - last_product_count
                 logger.info(
                     f"Products loaded: {last_product_count} -> "
-                    f"{current_product_count} (+{current_product_count - last_product_count})"
+                    f"{current_product_count} (+{diff})"
                 )
                 last_product_count = current_product_count
                 no_change_count = 0
@@ -267,15 +279,15 @@ try:
                 no_change_count += 1
                 if no_change_count >= 3:
                     logger.info(
-                        f"No new products loaded after {no_change_count} attempts. "
-                        f"Total products: {current_product_count}"
+                        f"No new products loaded after {no_change_count} "
+                        f"attempts. Total products: {current_product_count}"
                     )
                     break
-            
+
             count += 1
             # Random delay between attempts
             time.sleep(random.uniform(1, 3))
-            
+
         except Exception as e:
             logger.warning(f"Error during loading attempt {count}: {e}")
             # Try scrolling as fallback
@@ -302,23 +314,23 @@ try:
 
     # Extract item information
     pg_html = driver.page_source
-    
+
     # Final check: Make sure we didn't get an error page
-    if "ERR_NAME_NOT_RESOLVED" in pg_html or \
-       "This site can't be reached" in pg_html or \
-       "DNS_PROBE" in pg_html:
+    if ("ERR_NAME_NOT_RESOLVED" in pg_html or
+            "This site can't be reached" in pg_html or
+            "DNS_PROBE" in pg_html):
         raise Exception(
             "Error page detected in HTML. The website failed to load. "
             "This could be due to network issues or the site being down."
         )
-    
+
     # Check if we have actual product content
     if "product-card" not in pg_html.lower():
         logger.warning(
             "No product-card elements found in page source. "
             "The page may not have loaded correctly."
         )
-    
+
     soup = BeautifulSoup(pg_html, 'lxml')
 
     # Debug: Save raw HTML and prettified soup for inspection
@@ -333,7 +345,7 @@ try:
     with open(raw_html_path, 'w', encoding='utf-8') as f:
         f.write(pg_html)
     logger.info(f"Saved raw page HTML to {raw_html_path}")
-    
+
     with open(prettified_html_path, 'w', encoding='utf-8') as f:
         f.write(soup.prettify())
     logger.info(
@@ -460,16 +472,24 @@ except Exception as e:
         pg_html = driver.page_source
         soup = BeautifulSoup(pg_html, 'lxml')
         debug_dir = os.path.join(os.path.dirname(__file__), '..', '..')
-        raw_html_path = os.path.join(debug_dir, 'debug_smglobalshop_raw.html')
-        prettified_html_path = os.path.join(debug_dir, 'debug_smglobalshop.html')
-        
+        raw_html_path = os.path.join(
+            debug_dir, 'debug_smglobalshop_raw.html'
+        )
+        prettified_html_path = os.path.join(
+            debug_dir, 'debug_smglobalshop.html'
+        )
+
         with open(raw_html_path, 'w', encoding='utf-8') as f:
             f.write(pg_html)
-        logger.info(f"Saved raw page HTML to {raw_html_path} (after error)")
-        
+        logger.info(
+            f"Saved raw page HTML to {raw_html_path} (after error)"
+        )
+
         with open(prettified_html_path, 'w', encoding='utf-8') as f:
             f.write(soup.prettify())
-        logger.info(f"Saved prettified HTML to {prettified_html_path} (after error)")
+        logger.info(
+            f"Saved prettified HTML to {prettified_html_path} (after error)"
+        )
     except Exception as save_error:
         logger.warning(f"Could not save HTML for debugging: {save_error}")
 finally:
