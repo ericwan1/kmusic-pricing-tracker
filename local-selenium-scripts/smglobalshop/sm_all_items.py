@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 
 options = Options()
-options.binary_location = "/Users/ericwan/Desktop/Google Chrome.app/Contents/MacOS/Google Chrome"
+options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 options.add_argument("start-maximized")
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--incognito')
@@ -23,7 +23,7 @@ options.add_argument('--headless')
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-driver.get("https://smglobalshop.com/collections/all?usf_take=200")
+driver.get("https://global.shop.smtown.com/collections/all?usf_take=200")
 count = 1
 while True and count != 10:
     try:

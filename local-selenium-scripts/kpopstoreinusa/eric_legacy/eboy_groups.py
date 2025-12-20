@@ -5,7 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 options = Options()
-#options.binary_location = "/Users/ericwan/Desktop/Google Chrome.app/Contents/MacOS/Google Chrome"
+#options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 options.binary_location = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 options.add_argument("start-maximized")
 options.add_argument('--ignore-certificate-errors')
