@@ -1,7 +1,0 @@
-# Function dependencies, for example:
-# package>=version
-google-cloud-bigquery
-pandas
-datetime
-BeautifulSoup4
-requests

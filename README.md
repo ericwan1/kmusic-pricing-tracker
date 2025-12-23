@@ -5,9 +5,17 @@ There are dozens of sites on the internet that sell K-Pop merchandise. Some are 
 The sites currently chosen for scraping were selected because of their popularity within the collector circuit (Kpopalbums.com, Musicplaza.com, etc.). Some of these online stores also have a physical presence as well (choicemusicla.com). In version 1, official sites were selected as well (thejypshop.com). While there does not exist an estimation of total amount of money spent on these stores as a quantity or percentage of the total amount of money spent per year, the frequency of these sites in blogs, forums, and comments sections indicate that these sites are among the most popular places where Americans spend money on K-Pop merchandise. 
 
 ### Workflow
-Scraping is orchestrated and done through Google Cloud. Using Google Cloud Scheduler, a Pub/Sub topic is made for the specific script that we want to have executed. The subscriber is a function in Google Cloud Functions, which executes the script it contains and writes the data to BigQuery. Currently, scraped data is stored in multiple BigQuery tables. 
+Scraping is orchestrated through **Google Cloud Run Jobs** and **Cloud Scheduler**. The pipeline:
+1. **Cloud Scheduler** triggers weekly batch jobs
+2. **Cloud Run Jobs** execute containerized Selenium scrapers
+3. Raw data is written to **Google Cloud Storage** (date-partitioned)
+4. Data is validated, deduplicated, and loaded to **BigQuery**
+5. Cleaned dataset is automatically published to **Kaggle**
 
-Code is written and uploaded to Github periodically and the script code is copy pasted into GCP. 
+See `pipeline/README.md` for detailed architecture and setup instructions.
 
-### Current Headaches/To-Do
-Automate some of the selenium scripts; Also will need to build a dashboard to enable others to access scraped data. 
+### Current Status
+- ✅ Base Docker image with Chrome + Selenium
+- 🚧 Refactoring scrapers for Cloud Run
+- ⏳ Setting up data validation and deduplication
+- ⏳ Kaggle publishing automation 

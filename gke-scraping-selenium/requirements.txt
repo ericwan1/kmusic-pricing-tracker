@@ -1,8 +1,0 @@
-google-cloud
-google-cloud-bigquery
-selenium
-bs4
-lxml
-pandas
-numpy
-requests

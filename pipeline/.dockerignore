@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files (don't copy CSV files into image)
+*.csv
+*.json
+*.parquet
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Legacy/old code (we'll copy what we need explicitly)
+gcp-cloud-functions-scripts/
+local-selenium-scripts/
+gke-scraping-selenium/
+
+# Scraped data directories
+Scraped Data/
+misc-scraping-things/
+
+# Jupyter notebooks
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
