@@ -1,4 +1,8 @@
+# Ignored Directories used in development
+.december_scraped_data/
+.misc-scraping-scripts/
+.venv/
 
-.DS_Store
-
+# Python and MacOS Miscellaneous Files
 **/__pycache__/
+.DS_Store
