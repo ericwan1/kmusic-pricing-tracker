@@ -10,6 +10,9 @@ pandas>=1.5.0
 numpy>=1.23.0
 
 # Google Cloud
+# google-cloud is a meta-package that ensures all core dependencies are available
+google-cloud>=0.34.0
+# Specific packages we need
 google-cloud-storage>=2.10.0
 google-cloud-bigquery>=3.11.0
 google-cloud-logging>=3.5.0

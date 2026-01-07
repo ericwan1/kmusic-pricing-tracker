@@ -100,7 +100,8 @@ RUN (google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || ec
     && echo "ChromeDriver will be installed by webdriver-manager at runtime if needed"
 
 # Copy and install Python requirements
-COPY requirements.txt .
+# Note: When building from project root, we need to specify the full path
+COPY pipeline/base/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Set environment variables for Chrome
